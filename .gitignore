@@ -8,3 +8,7 @@ __pycache__/
 ## IDE / Editor
 .vscode/
 .idea/
+
+
+beginner.ipynb
+professional.ipynb
