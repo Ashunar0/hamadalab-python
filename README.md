@@ -40,13 +40,31 @@ source venv/bin/activate
 
 ### 2. 必要なライブラリのインストール
 
-仮想環境をアクティベートした状態で，必要なライブラリを一括でインストールします。
+仮想環境をアクティベートした状態で，必要なライブラリをインストールします。
+
+#### 方法1: requirements.txtを使用（推奨）
+
+プロジェクトに含まれている `requirements.txt` を使用して，必要なライブラリを一括でインストールします。
 
 ```bash
 # pipを最新化
 pip install --upgrade pip
 
-# 必要なライブラリをインストール
+# requirements.txtに記載されているすべてのライブラリをインストール
+pip install -r requirements.txt
+```
+
+この方法により，プロジェクトで使用するすべてのライブラリとその依存関係が，正しいバージョンでインストールされます。
+
+#### 方法2: 個別にインストール
+
+`requirements.txt` がない場合や，最小限のパッケージのみをインストールしたい場合は，以下のコマンドを使用します。
+
+```bash
+# pipを最新化
+pip install --upgrade pip
+
+# 必要なライブラリを個別にインストール
 pip install pybaseball pandas scikit-learn matplotlib seaborn jupyter
 ```
 
