@@ -9,6 +9,8 @@ __pycache__/
 .vscode/
 .idea/
 
+## macOS
+.DS_Store
 
 beginner.ipynb
 professional.ipynb
