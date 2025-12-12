@@ -1,0 +1,187 @@
+% !TeX program = lualatex
+% !TeX encoding = UTF-8
+\documentclass[11pt, aspectratio=169]{beamer}
+
+% --- パッケージ設定 ---
+\usepackage{luatexja}
+\usepackage[haranoaji]{luatexja-preset} % 日本語フォント設定
+\renewcommand{\kanjifamilydefault}{\gtdefault} % ゴシック体標準
+\usepackage{graphicx}     % 画像挿入
+\usepackage{booktabs}     % 綺麗な表
+\usepackage{tikz}         % 図形描画
+
+% --- テーマ設定 ---
+\usetheme{Madrid}         % アカデミックで標準的なテーマ
+\usecolortheme{dolphin}   % 知的な青系カラー
+\usefonttheme{professionalfonts} % 数式フォントを美しく
+
+% --- 表紙情報 ---
+\title[MLB投球分類と誤分類解析]{MLB Statcastデータを用いた\\投球タイプ分類と誤分類の構造解析}
+\subtitle{〜カットボール(FC)の識別精度向上に向けて〜}
+\author[花井 龍悟]{花井 龍悟 (B3)}
+\institute[浜田研]{浜田研究室}
+\date{\today}
+
+\begin{document}
+
+% --- P1. 表紙 ---
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% --- P2. 背景と目的 ---
+\begin{frame}{背景と目的}
+  \begin{block}{背景: 現代野球におけるデータ活用}
+    \begin{itemize}
+      \item MLBでは全投球の物理データ（Statcast）が計測されている。
+      \item 速度、回転数、変化量などから球種を自動判定する需要が高い。
+    \end{itemize}
+  \end{block}
+
+  \begin{alertblock}{本研究の目的}
+    \begin{enumerate}
+      \item 機械学習（アンサンブル学習）を用いた高精度な分類器の構築
+      \item \textbf{誤分類（Error Analysis）を通じた「人間に近い識別」の実現}
+      \item 特に判別が困難な\textbf{「カットボール(FC)」}の精度向上
+    \end{enumerate}
+  \end{alertblock}
+\end{frame}
+
+% --- P3. 実装パイプライン ---
+\begin{frame}{実装パイプライン}
+  一般的なフローに加え、\textbf{分析フェーズ}を重視したサイクルを構築。
+
+  \vspace{1em}
+  \centering
+  \begin{tikzpicture}[node distance=3cm, auto, >=stealth]
+    % ノード定義
+    \node[draw, rectangle, rounded corners] (data) {データ取得};
+    \node[draw, rectangle, rounded corners, right of=data] (prep) {前処理};
+    \node[draw, rectangle, rounded corners, right of=prep] (model) {モデル構築};
+    \node[draw, rectangle, rounded corners, fill=yellow!20, right of=model, align=center] (analysis) {\textbf{Error Analysis}\\(本日の焦点)};
+    
+    % 矢印
+    \draw[->, thick] (data) -- (prep);
+    \draw[->, thick] (prep) -- (model);
+    \draw[->, thick] (model) -- (analysis);
+    \draw[->, thick, dashed, bend left] (analysis) to node[above] {Feature Engineering} (prep);
+  \end{tikzpicture}
+
+  \vspace{1em}
+  \begin{itemize}
+    \item \textbf{ライブラリ:} \texttt{pybaseball}, \texttt{scikit-learn}, \texttt{LightGBM} 等
+    \item \textbf{モデル:} Random Forest, XGBoost, LightGBMのアンサンブル
+  \end{itemize}
+\end{frame}
+
+% --- P4. ベースライン評価 ---
+\begin{frame}{モデル構築とベースライン評価}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \textbf{現状のスコア:}
+      \begin{itemize}
+        \item Accuracy: \textbf{83.0\%}
+        \item Macro F1: 78.5\%
+      \end{itemize}
+      
+      \vspace{1em}
+      \textbf{課題:}
+      \begin{itemize}
+        \item 全体的には良好だが、特定の球種で迷いが見られる。
+        \item 特に\textbf{FC（カットボール）}のRecallが低い。
+      \end{itemize}
+    \end{column}
+    
+    \begin{column}{0.5\textwidth}
+      \centering
+      % ここにPythonで作った Classification Report のスクショなどを貼る
+      % \includegraphics[width=\textwidth]{classification_report.png}
+      \fbox{\begin{minipage}{0.9\textwidth}
+        \centering
+        \vspace{2cm} Classification Report \\ (画像プレースホルダー) \vspace{2cm}
+      \end{minipage}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --- P5. 課題の発見 (ここからデモへ繋ぐ) ---
+\begin{frame}{課題の発見：カットボール(FC)の壁}
+  混同行列（Confusion Matrix）による詳細分析。
+  
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \centering
+      % ここにPythonで作った Confusion Matrix の画像を貼る
+      % \includegraphics[width=\textwidth]{confusion_matrix.png}
+      \fbox{\begin{minipage}{0.9\textwidth}
+        \centering
+        \vspace{2.5cm} Confusion Matrix \\ (FCの誤分類を示す図) \vspace{2.5cm}
+      \end{minipage}}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}
+        \item FCが\textbf{SL（スライダー）}および\textbf{FF（ストレート）}と混同されている。
+        \item 単純な「変化量」や「球速」だけでは分離できていない可能性。
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --- P6. 仮説と検証 ---
+\begin{frame}{仮説と検証：なぜ間違えるのか？}
+  \begin{block}{仮説}
+    「FCとSLは、変化量($pfx\_x, pfx\_z$)の分布において重なりが大きく、モデルが境界線を引けていないのではないか？」
+  \end{block}
+
+  \vspace{0.5em}
+  \textbf{検証（物理的特徴量の可視化）:}
+  \begin{itemize}
+    \item 以下の散布図において、赤点（誤分類）が緑点（正解）と完全に重複している。
+    \item \textbf{結論:} 既存の特徴量（絶対値）だけでは限界がある。
+  \end{itemize}
+  
+  % ここにPythonで作った 散布図(plot_misclassification) の画像を貼る
+  % \centering \includegraphics[height=3.5cm]{scatter_plot.png}
+\end{frame}
+
+% --- P7. 改善へのアプローチ ---
+\begin{frame}{改善へのアプローチ：Feature Engineering}
+  ドメイン知識に基づき、モデルに「コンテキスト」を与える。
+
+  \begin{enumerate}
+    \item \textbf{相対速度 (Velocity Diff):}
+      \begin{itemize}
+        \item その投手の「平均ストレート球速」との差分をとる。
+        \item 投手ごとの球速差をキャンセルし、球種の定義を明確化。
+      \end{itemize}
+      
+    \item \textbf{回転効率 (Spin Efficiency) の推定:}
+      \begin{itemize}
+        \item 「回転数が多いのに変化しない（ジャイロ成分）」をFCの特徴として捉える。
+        \item $ \frac{\text{実際の変化量}}{\text{回転数から予測される理論最大変化量}} $
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+% --- P8. 今後の展望 ---
+\begin{frame}{まとめと今後の展望}
+  \begin{itemize}
+    \item \textbf{まとめ:}
+      \begin{itemize}
+        \item MLB投球データの分類モデルを構築。
+        \item Error Analysisにより、FCの誤分類原因を物理的に特定。
+      \end{itemize}
+      
+    \item \textbf{今後の展望:}
+      \begin{itemize}
+        \item 提案した新特徴量（相対速度、回転効率）の実装と再学習。
+        \item デモ用分析ツールのUI改良。
+      \end{itemize}
+  \end{itemize}
+  
+  \vspace{1em}
+  \centering
+  \textbf{この後、実際のモデルの動作と分析の様子をデモでお見せします。}
+\end{frame}
+
+\end{document}
