@@ -21,21 +21,21 @@
 ## 🚀 セットアップ (Setup)
 
 ### 1. 仮想環境の構築
-本プロジェクトでは，Pythonの仮想環境 (`venv`) の使用を推奨します。
+本プロジェクトでは，Pythonの仮想環境 (`.venv`) の使用を推奨します。
 
 ```bash
 # プロジェクトディレクトリを作成（例: mlb_war_project）
 mkdir mlb_war_project
 cd mlb_war_project
 
-# "venv" という名前の仮想環境を作成
-python3 -m venv venv
+# ".venv" という名前の仮想環境を作成
+python3 -m venv .venv
 
 # 仮想環境をアクティベート（有効化）
 # (Mac/Linux)
-source venv/bin/activate
+source .venv/bin/activate
 # (Windows)
-# .\venv\Scripts\activate
+# .\.venv\Scripts\activate
 ```
 
 ### 2. 必要なライブラリのインストール
