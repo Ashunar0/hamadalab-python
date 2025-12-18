@@ -11,16 +11,29 @@
 \usepackage{tikz}         % 図形描画
 
 % --- テーマ設定 ---
-\usetheme{Madrid}         % アカデミックで標準的なテーマ
-\usecolortheme{dolphin}   % 知的な青系カラー
+% --- テーマ設定 ---
+\usetheme{Madrid}
+% 和やかな配色の定義 (Matcha Green & Earthy Brown)
+\definecolor{MatchaGreen}{RGB}{119, 158, 119} % 抹茶色
+\definecolor{Cream}{RGB}{250, 248, 240}       % クリーム色
+\definecolor{DarkBrown}{RGB}{80, 50, 40}      % 焦げ茶色
+
+\usecolortheme[named=MatchaGreen]{structure}
+\setbeamercolor{palette primary}{bg=MatchaGreen, fg=white}
+\setbeamercolor{palette secondary}{bg=MatchaGreen!80!white, fg=white}
+\setbeamercolor{palette tertiary}{bg=DarkBrown, fg=white}
+\setbeamercolor{frametitle}{bg=MatchaGreen, fg=white}
+\setbeamercolor{title}{bg=DarkBrown, fg=white}
+\setbeamercolor{background canvas}{bg=Cream} % 背景をクリーム色に
+
 \usefonttheme{professionalfonts} % 数式フォントを美しく
 
 % --- 表紙情報 ---
 \title[MLB投球分類と誤分類解析]{MLB Statcastデータを用いた\\投球タイプ分類と誤分類の構造解析}
 \subtitle{〜カットボール(FC)の識別精度向上に向けて〜}
-\author[花井 龍悟]{花井 龍悟 (B3)}
+\author[浅尾・川野辺・花井]{浅尾 友志, 川野辺 旭, 花井 龍悟}
 \institute[浜田研]{浜田研究室}
-\date{\today}
+\date{2025/12/19}
 
 \begin{document}
 
