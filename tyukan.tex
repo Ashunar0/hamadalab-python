@@ -109,10 +109,32 @@
       \centering
       % ここにPythonで作った Classification Report のスクショなどを貼る
       % \includegraphics[width=\textwidth]{classification_report.png}
-      \fbox{\begin{minipage}{0.9\textwidth}
-        \centering
-        \vspace{2cm} Classification Report \\ (画像プレースホルダー) \vspace{2cm}
-      \end{minipage}}
+      % Classification Report Table
+      % Classification Report Table
+      \centering
+      \tiny
+      \begin{tabular}{lrrrr}
+        \toprule
+         & precision & recall & f1-score & support \\ \midrule
+        CH & 0.86 & 0.91 & 0.88 & 23065 \\
+        CU & 0.79 & 0.77 & 0.78 & 14074 \\
+        EP & 0.65 & 0.60 & 0.63 & 167 \\
+        FA & 0.71 & 0.70 & 0.70 & 334 \\
+        FC & 0.71 & 0.64 & 0.68 & 16796 \\
+        FF & 0.94 & 0.95 & 0.94 & 68198 \\
+        FO & 0.42 & 0.23 & 0.30 & 230 \\
+        FS & 0.77 & 0.54 & 0.63 & 4759 \\
+        KC & 0.71 & 0.46 & 0.56 & 4410 \\
+        KN & 0.49 & 0.55 & 0.52 & 58 \\
+        Others & 0.54 & 0.12 & 0.20 & 56 \\
+        SI & 0.90 & 0.88 & 0.89 & 32821 \\
+        SL & 0.75 & 0.81 & 0.78 & 34122 \\
+        ST & 0.73 & 0.75 & 0.74 & 12405 \\
+        SV & 0.71 & 0.44 & 0.54 & 843 \\ \midrule
+        accuracy & & & 0.84 & 212338 \\
+        macro avg & 0.71 & 0.63 & 0.65 & 212338 \\
+        weighted avg & 0.84 & 0.84 & 0.84 & 212338 \\ \bottomrule
+      \end{tabular}
     \end{column}
   \end{columns}
 \end{frame}
@@ -126,10 +148,7 @@
       \centering
       % ここにPythonで作った Confusion Matrix の画像を貼る
       % \includegraphics[width=\textwidth]{confusion_matrix.png}
-      \fbox{\begin{minipage}{0.9\textwidth}
-        \centering
-        \vspace{2.5cm} Confusion Matrix \\ (FCの誤分類を示す図) \vspace{2.5cm}
-      \end{minipage}}
+      \includegraphics[width=\textwidth, height=0.8\textheight, keepaspectratio]{kongougyoureru.png}
     \end{column}
     \begin{column}{0.4\textwidth}
       \begin{itemize}
@@ -141,20 +160,26 @@
 \end{frame}
 
 % --- P6. 仮説と検証 ---
-\begin{frame}{仮説と検証：なぜ間違えるのか？}
-  \begin{block}{仮説}
-    「FCとSLは、変化量($pfx\_x, pfx\_z$)の分布において重なりが大きく、モデルが境界線を引けていないのではないか？」
-  \end{block}
+\begin{frame}{結果の分析の一例：カットボール(FC)の壁}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{仮説}
+        「FCとSLは、変化量($pfx\_x, pfx\_z$)の分布において重なりが大きく、モデルが境界線を引けていないのではないか？」
+      \end{block}
 
-  \vspace{0.5em}
-  \textbf{検証（物理的特徴量の可視化）:}
-  \begin{itemize}
-    \item 以下の散布図において、赤点（誤分類）が緑点（正解）と完全に重複している。
-    \item \textbf{結論:} 既存の特徴量（絶対値）だけでは限界がある。
-  \end{itemize}
-  
-  % ここにPythonで作った 散布図(plot_misclassification) の画像を貼る
-  % \centering \includegraphics[height=3.5cm]{scatter_plot.png}
+      \vspace{0.5em}
+      \textbf{検証（物理的特徴量の可視化）:}
+      \begin{itemize}
+        \item 右図の散布図において、赤点（誤分類）が緑点（正解）と完全に重複している。
+        \item \textbf{結論:} 既存の特徴量（絶対値）だけでは限界がある。
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+      \centering
+      \includegraphics[width=\textwidth, height=0.8\textheight, keepaspectratio]{sanpuzu.png}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 % --- P7. 改善へのアプローチ ---
