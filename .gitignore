@@ -29,3 +29,16 @@ submission.csv
 *.snm
 *.toc
 *.vrb
+
+# LaTeX artifacts
+*.aux
+*.log
+*.dvi
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.toc
+*.vrb
