@@ -30,10 +30,15 @@ submission.csv
 *.toc
 *.vrb
 
-# Large data files
-train_pitcher_v2.csv
-test_pitcher_v2.csv
-train_with_features.csv
-train_with_pitcher_features.csv
-test_with_features.csv
-test_with_pitcher_features.csv
+# LaTeX artifacts
+*.aux
+*.log
+*.dvi
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.toc
+*.vrb
