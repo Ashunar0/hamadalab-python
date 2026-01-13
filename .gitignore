@@ -29,3 +29,11 @@ submission.csv
 *.snm
 *.toc
 *.vrb
+
+# Large data files
+train_pitcher_v2.csv
+test_pitcher_v2.csv
+train_with_features.csv
+train_with_pitcher_features.csv
+test_with_features.csv
+test_with_pitcher_features.csv
